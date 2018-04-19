@@ -1,6 +1,7 @@
 ### v4.6b
 - **Telegram FOSS:**
   - Allow to set a proxy before login #230
+  - Use MS DF 2 PWN RKN. Getting connected to Telegram behind a country-wide block may require you to stare on your login screen for some seconds.
 
 #### v4.8.5 (not released as FOSS version)
 - Discover new stickers. Type one emoji to see suggestions from popular sticker sets. Suggestions from the sticker sets you've added will come first.

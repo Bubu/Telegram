@@ -28,6 +28,8 @@
 #include "ByteArray.h"
 #include "Config.h"
 
+#include <android/log.h>
+
 #ifdef ANDROID
 #include <jni.h>
 JavaVM *javaVm = nullptr;
@@ -2423,6 +2425,8 @@ void ConnectionsManager::updateDcSettings(uint32_t dcNum, bool workaround) {
                             return;
                         }
                     }
+
+                    __android_log_print(ANDROID_LOG_DEBUG, "DCUPDATES getConfig", "Address %s", dcOption->ip_address.c_str());
                     DEBUG_D("getConfig add %s:%d to dc%d", dcOption->ip_address.c_str(), dcOption->port, dcOption->id);
                     addresses->push_back(TcpAddress(dcOption->ip_address, dcOption->port, dcOption->flags));
                 }
@@ -2590,7 +2594,12 @@ void ConnectionsManager::applyDnsConfig(NativeByteBuffer *buffer) {
                 for (std::vector<std::unique_ptr<TL_ipPort>>::iterator iter = config->ip_port_list.begin(); iter != config->ip_port_list.end(); iter++) {
                     TL_ipPort *ipPort = iter->get();
                     addresses.push_back(TcpAddress(ipPort->ipv4, ipPort->port, 0));
+                    __android_log_print(ANDROID_LOG_DEBUG, "DCUPDATES", "Address %s", ipPort->ipv4.c_str());
+                    __android_log_print(ANDROID_LOG_DEBUG, "DCUPDATES", "Port %d", ipPort->port);
+                    __android_log_print(ANDROID_LOG_DEBUG, "DCUPDATES", "DC %d", config->dc_id);
                     DEBUG_D("got address %s and port %d for dc%d", ipPort->ipv4.c_str(), ipPort->port, config->dc_id);
+
+                    applyDatacenterAddress(config->dc_id, ipPort->ipv4, ipPort->port);
                 }
                 if (!addresses.empty()) {
                     datacenter->replaceAddresses(addresses, TcpAddressFlagTemp);
